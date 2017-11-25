@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <style>
+        body,html {
+            padding: 0;
+            margin: 0;
+            height: 100%;
+            overflow: hidden;
+            background: #333;
+        }
+        #content {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            background: #222;
+            width: 1144px;
+            height: 768px;
+            margin: auto;
+            border: 5px solid #222;
+        }
+        #paper {
+            background: black;
+            width: 1024px;
+            height: 768px;
+            float: left;
+            left: 0;
+            top: 0;
+        }
+        #panel {
+            float: left;
+            font: normal 14px sans-serif;
+            color: #CCC;
+            width: 120px;
+        }
+        #panel h3 {
+            text-align: center;
+        }
+        #panel #playerList {
+            list-style-type: none;
+            padding: 0 0 0 10px;
+            margin: 0;
+        }
+    </style>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <div id="content">
+        <canvas id="paper" width="1024" height="768"></canvas>
+        <div id="panel">
+            <h3>Pontuação</h3>
+            <ul id="playerList"></ul>
+        </div>
+    </div>
+</body>
+<script>
+
+    var SERVER_ADDRESS = document.URL;
+
+    var ctx = document.getElementById("paper").getContext("2d");
+    var playerListElem = document.getElementById("playerList");
+
+    var name = prompt("Escreva seu nome:");
+    if( name === null || name === "" || name === "null" ) {
+        name = "Jogador";
+    }
+
+    var keys = {};
+
+    ctx.lineWidth = 2;
+    ctx.font = "normal 14px sans-serif";
+
+    function render( state )
+    {
+        ctx.clearRect( 0, 0, 1024, 768 );
+        var newListHTML = "";
+
+        // Renderiza as naves
+        for( var i = 0 ; i < state.p.length ; ++i )
+        {
+            ctx.save();
+            ctx.strokeStyle = "#"+state.p[i][5];
+            ctx.fillStyle = "#"+state.p[i][5];
+            ctx.translate( state.p[i][0], state.p[i][1] );
+            ctx.fillText( state.p[i][3], 12, -10 );
+            ctx.rotate( state.p[i][2] );
+            ctx.beginPath();
+            ctx.moveTo( -12, -10 );
+            ctx.lineTo( -12,  10 );
+            ctx.lineTo(  12,   0 );
+            ctx.lineTo( -12, -10 );
+            ctx.lineTo( -12,   0 );
+            ctx.closePath();
+            ctx.stroke();
+            if( i==state.i && keys[38] ) {
+                ctx.beginPath();
+                ctx.moveTo( -12, -4 );
+                ctx.lineTo( -22,  0 );
+                ctx.lineTo( -12,  4 );
+                ctx.closePath();
+                ctx.stroke();
+            }
+            ctx.restore();
+
+            newListHTML += "<li>"+state.p[i][3]+" : "+state.p[i][4]+"</li>";
+        }
+
+        // Renderiza as balas
+        for( var i = 0 ; i < state.b.length ; ++i )
+        {
+            ctx.fillStyle = "#"+state.b[i][2];
+
+            ctx.save();
+            ctx.translate( state.b[i][0], state.b[i][1] );
+            ctx.fillRect( -4, -4, 4, 4 );
+            ctx.restore();
+        }
+
+        playerListElem.innerHTML = newListHTML;
+    }
+
+    // Conecta no servidor
+    var socket = io.connect( SERVER_ADDRESS );
+    socket.on("connect", function ()
+    {
+        window.onkeydown = function(e) {
+            keys[ e.keyCode ] = true;
+            socket.send( JSON.stringify(keys) );
+        }
+        window.onkeyup = function(e) {
+            delete keys[ e.keyCode ];
+            socket.send( JSON.stringify(keys) );
+        }
+
+        socket.on("message", function(data) {
+            var state = JSON.parse(data);
+            render( state );
+        });
+
+        socket.send(JSON.stringify({name:name}));
+    });
+
+</script>
+</html>
