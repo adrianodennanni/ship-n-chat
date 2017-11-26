@@ -41,8 +41,8 @@ function Bullet( owner )
     this.x = owner.x + owner.vx + 18 * Math.cos( owner.r );
     this.y = owner.y + owner.vy + 18 * Math.sin( owner.r );
 
-    this.vx = 6 * Math.cos( owner.r ) + owner.vx;
-    this.vy = 6 * Math.sin( owner.r ) + owner.vy;
+    this.vx = 6 * Math.cos( owner.r ) + owner.vx/2;
+    this.vy = 6 * Math.sin( owner.r ) + owner.vy/2;
 
     this.owner = owner;
     this.color = owner.color;
@@ -62,8 +62,9 @@ var FIELD_HEIGHT =  768;
 var SHIP_HIT_RADIUS_SQR = 15*15;
 var SHIP_DRAW_RADIUS    = 20;
 
-var SPEEDCAP     = 8;
+var SPEEDCAP     = 8  ;
 var ACCELERATION = 0.2;
+var DEACCELERATION = 0.02;
 var TURN_SPEED   = 8 / 180 * Math.PI;
 
 function Player()
@@ -111,11 +112,17 @@ Player.prototype.update = function()
     }
 
     var m2 = this.vx*this.vx + this.vy*this.vy;
+    var m = Math.sqrt( m2 );
     if( m2 > SPEEDCAP*SPEEDCAP ) {
-        var m = Math.sqrt( m2 );
         this.vx *= SPEEDCAP / m;
         this.vy *= SPEEDCAP / m;
     }
+
+    // Desaceleração causada por atrito
+    this.vx -= DEACCELERATION * this.vx;
+    this.vy -= DEACCELERATION * this.vy;
+
+
 
     if( this.latestKeys[ 32 ] ) { // Space
         if( !this.holdingSpace ) {
@@ -198,41 +205,49 @@ function gameLoop()
         playerSockets[i].volatile.send(JSON.stringify( statePacket ));
     }
 }
+// Configuração do socket.io
+var maxPlayers    = 16;
+var players       = [];
+var playerSockets = [];
+var gameLoopInterval = null;
 
 // Serve a página estaticamente
-
 var PORT = 2017;
-
 var app = require("http").createServer(handler);
 var io = require("socket.io").listen(app);
 var fs = require("fs");
 app.listen(PORT);
 function handler( req, res )
 {
+
     var filepath = req.url;
-    if( filepath === "/" ) filepath = "/client.html";
+    if( filepath === "/" ) {
+      if( players.length >= maxPlayers ) {
+        res.setHeader("Content-Type", "text/plain; charset=utf-8");
+        return res.end("Número máximo de jogadores excedido.");
+      }
+      else {
+        filepath = "/client.html";
+      }
+    }
 
     if( filepath !== "/client.html" && filepath !== "/raphael.js" ) {
         res.writeHead(500);
-        return res.end("This server only serves spaceships!");
+        return res.end("Rota inexistente!");
     }
 
     fs.readFile(__dirname + filepath,
     function (err, data) {
         if (err) {
             res.writeHead(500);
-            return res.end("Error loading page.");
+            return res.end("Erro carregando a página.");
         }
         res.writeHead(200);
         res.end(data);
     });
+
+
 }
-
-// Configuração do socket.io
-
-var players       = [];
-var playerSockets = [];
-var gameLoopInterval = null;
 
 io.sockets.on("connection", function( socket )
 {
@@ -258,7 +273,7 @@ io.sockets.on("connection", function( socket )
     });
 
     if( gameLoopInterval === null ) {
-        gameLoopInterval = setInterval( gameLoop, 33 );
+        gameLoopInterval = setInterval( gameLoop, 25 );
     }
 });
 
