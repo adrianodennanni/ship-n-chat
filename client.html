@@ -44,6 +44,9 @@
             padding: 0 0 0 10px;
             margin: 0;
         }
+        ul > li:first-child {
+          font-size: 20px;
+        }
     </style>
     <script type="text/javascript" src="/socket.io/socket.io.js"></script>
 </head>
@@ -121,7 +124,7 @@
 
             ctx.lineWidth = 1;
             ctx.closePath();
-            
+
             ctx.fill();
             ctx.stroke();
             if( i==state.i && keys[38] ) {

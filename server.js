@@ -204,6 +204,11 @@ function gameLoop()
         statePacket.i = i;
         playerSockets[i].volatile.send(JSON.stringify( statePacket ));
     }
+
+    // Ordena os jogadores por pontuação
+    players.sort(function(a, b) {
+      return b.score - a.score;
+    });
 }
 // Configuração do socket.io
 var maxPlayers    = 16;
