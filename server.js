@@ -236,7 +236,7 @@ function handler( req, res )
       }
     }
 
-    if( filepath !== "/client.html" && filepath !== "/raphael.js" ) {
+    if( filepath !== "/client.html" && filepath !== "/raphael.js" && filepath !== "/favicon.ico" ) {
         res.writeHead(500);
         return res.end("Rota inexistente!");
     }
