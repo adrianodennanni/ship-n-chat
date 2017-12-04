@@ -129,8 +129,8 @@
       return false;
     });
     socket.on('chat message', function(msg) {
-      $('#messages').append($('<li>').text(msg));
-      window.scrollTo(0, document.body.scrollHeight);
+      $('#messages').append($('<li>').text(msg)).focus();
+      $('#messages').animate({scrollTop: $('#messages').prop("scrollHeight")}, 1);
     });
   });
 

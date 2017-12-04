@@ -1,9 +1,7 @@
-html {
-  overflow-x: hidden;
-}
-
 html,
 body {
+  overflow-x: hidden;
+  overflow-y: hidden;
   background: #333 !important;
 }
 
@@ -41,14 +39,6 @@ body {
   list-style-type: none;
 }
 
-ul>li:nth-child(1) {
-  font-size: 22px;
-}
-
-ul>li:nth-child(2) {
-  font-size: 18px;
-}
-
 body {
   font: 13px Helvetica, Arial;
 }
@@ -63,8 +53,18 @@ form input {
 form button {
 }
 
+#messages {
+  overflow-y: scroll;
+  height: 86%;
+  max-height: 86vh;
+}
+
 #messages li {
   padding: 5px 10px;
+}
+
+#messages li:last-child {
+  font-size: 22px;
 }
 
 #messages li:nth-child(odd) {
