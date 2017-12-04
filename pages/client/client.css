@@ -1,3 +1,7 @@
+html {
+  zoom:80%;
+}
+
 html,
 body {
   overflow-x: hidden;
@@ -55,8 +59,8 @@ form button {
 
 #messages {
   overflow-y: scroll;
-  height: 86%;
-  max-height: 86vh;
+  height: 105%;
+  max-height: 105vh;
 }
 
 #messages li {
