@@ -1,136 +1,39 @@
-<!DOCTYPE html>
-<html>
+  var SERVER_ADDRESS;
 
-<head>
-  <meta charset="utf-8" />
-  <title>Ship'n'Chat</title>
-  <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
-  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-  <style>
-    html,
-    body {
-      padding: 0;
-      margin: 0;
-      height: 100%;
-      overflow: hidden;
-      background: #333;
+  var ctx;
+  var playerListElem;
+
+  var keys;
+  var name;
+
+  $( document ).ready(function() { 
+
+    window.addEventListener("keydown", function(e) {
+        // space and arrow keys
+        if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+            e.preventDefault();
+        }
+    }, false); 
+
+    SERVER_ADDRESS = document.URL;
+
+    ctx = document.getElementById("paper").getContext("2d");
+    playerListElem = document.getElementById("playerList");
+    name = prompt("Escreva seu nome:");
+
+    if (name.length > 10) {
+      name = invalidName(name);
     }
 
-    #content {
-      right: 0;
-      top: 0;
-      bottom: 0;
-      background: #222;
-      width: 1204px;
-      height: 100%;
-      margin-top: auto;
-      margin-right: 0px;
-      margin-bottom: auto;
-      border: 5px solid #222;
+    if (name === null || name === "" || name === "null") {
+      name = "Jogador";
     }
 
-    #message_box {
-      display: table-cell;
-      width: 100%;
-    }
+    keys = {};
 
-    #paper {
-      background: url("/background.png");
-    }
-
-    #panel {
-      font: normal 14px sans-serif;
-      color: #CCC;
-      width: 180px;
-      top: 0px;
-      bottom: 0px;
-      float: right;
-    }
-
-    #panel h3 {
-      text-align: center;
-    }
-
-    #panel #playerList {
-      list-style-type: none;
-      padding: 0 0 0 10px;
-      margin: 0;
-    }
-
-    ul>li:nth-child(1) {
-      font-size: 22px;
-    }
-
-    ul>li:nth-child(2) {
-      font-size: 18px;
-    }
-
-    body {
-      font: 13px Helvetica, Arial;
-      display: table;
-    }
-
-    form {
-      background: #000;
-      padding: 3px;
-      bottom: 0;
-    }
-
-    form input {
-      position: relative;
-      border: 0;
-      padding-top: 5px;
-      padding-bottom: 5px;
-      width: 90%;
-    }
-
-    form button {
-      width: 8%;
-      margin-left: 2%;
-      padding: 10px;
-    }
-
-    #messages {
-      list-style-type: none;
-      margin: 0;
-      padding: 0;
-
-    }
-
-    #messages li {
-      padding: 5px 10px;
-    }
-
-    #messages li:nth-child(odd) {
-      background: #eee;
-    }
-
-    #messages {
-      margin-bottom: 40px
-    }
-  </style>
-</head>
-
-<body>
-  <div id="message_box">
-    <ul id="messages"></ul>
-    <form action="">
-      <input id="m" autocomplete="off" /><button>Enviar</button>
-    </form>
-  </div>
-  <div id="content">
-    <canvas id="paper" width="1024" height="768"></canvas>
-    <div id="panel">
-      <h3>Pontuação</h3>
-      <ul id="playerList"></ul>
-    </div>
-  </div>
-</body>
-<script>
-  var SERVER_ADDRESS = document.URL;
-
-  var ctx = document.getElementById("paper").getContext("2d");
-  var playerListElem = document.getElementById("playerList");
+    ctx.lineWidth = 2;
+    ctx.font = "normal 14px sans-serif";
+  })
 
   function invalidName(name) {
     var new_name = prompt("Seu nome não pode exceder 10 caracteres. Escreva seu nome:");
@@ -139,21 +42,6 @@
     }
     return new_name;
   }
-
-  var name = prompt("Escreva seu nome:");
-
-  if (name.length > 10) {
-    name = invalidName(name);
-  }
-
-  if (name === null || name === "" || name === "null") {
-    name = "Jogador";
-  }
-
-  var keys = {};
-
-  ctx.lineWidth = 2;
-  ctx.font = "normal 14px sans-serif";
 
   function render(state) {
     ctx.clearRect(0, 0, 1024, 768);
@@ -266,9 +154,3 @@
       name: name
     }));
   });
-</script>
-
-<script>
-</script>
-
-</html>

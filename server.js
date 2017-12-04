@@ -238,21 +238,28 @@ io.on('connection', function(socket){
 
 function handler(req, res) {
 
-  var filepath = req.url;
-  if (filepath === "/") {
+  var fileName = req.url;
+  var filepath = "/";
+
+  if (fileName != "/favicon.ico" && fileName!= "/background.png") {
+    if (fileName == "/") {
+      fileName = "/client.html";
+    }
+
     if (players.length >= maxPlayers) {
       res.setHeader("Content-Type", "text/plain; charset=utf-8");
       return res.end("Número máximo de jogadores excedido.");
     } else {
-      filepath = "/client.html";
+      filepath = "/pages/client" + fileName;
     }
+  } else {
+    filepath = fileName;
   }
 
-  if (filepath !== "/client.html" && filepath !== "/favicon.ico" && filepath !== "/background.png") {
+  /*if (filepath !== "/pages/client/client.html" && filepath !== "/favicon.ico" && filepath !== "/background.png") {
     res.writeHead(500);
     return res.end("Rota inexistente!");
-  }
-
+  }*/
   fs.readFile(__dirname + filepath,
     function(err, data) {
       if (err) {

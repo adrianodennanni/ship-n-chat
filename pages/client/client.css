@@ -1,0 +1,97 @@
+html {
+  overflow-x: hidden;
+}
+
+html,
+body {
+  background: #333 !important;
+}
+
+#content {
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: #222;
+  width: 1204px;
+  height: 100%;
+  margin-top: auto;
+  margin-right: 0px;
+  margin-bottom: auto;
+  border: 5px solid #222;
+}
+
+#message_box {
+  width: 100%;
+}
+
+#paper {
+  background: url("/background.png");
+}
+
+#panel {
+  font: normal 14px sans-serif;
+  color: #CCC;
+  float: right;
+}
+
+#panel h3 {
+}
+
+#panel #playerList {
+  list-style-type: none;
+}
+
+ul>li:nth-child(1) {
+  font-size: 22px;
+}
+
+ul>li:nth-child(2) {
+  font-size: 18px;
+}
+
+body {
+  font: 13px Helvetica, Arial;
+}
+
+form {
+  background: #000;
+}
+
+form input {
+}
+
+form button {
+}
+
+#messages li {
+  padding: 5px 10px;
+}
+
+#messages li:nth-child(odd) {
+  background: teal;
+}
+#messages li:nth-child(even) {
+  background: blue;
+}
+
+.row {
+  overflow-x: auto;
+  white-space: nowrap;
+  flex-wrap: nowrap !important;
+}
+
+.row > .col-md-1,
+.row > .col-md-2,
+.row > .col-md-3,
+.row > .col-md-4,
+.row > .col-md-5,
+.row > .col-md-6,
+.row > .col-md-7,
+.row > .col-md-8,
+.row > .col-md-9,
+.row > .col-md-10,
+.row > .col-md-11,
+.row > .col-md-12 {
+  display: inline-block !important;
+  float: none !important;
+}

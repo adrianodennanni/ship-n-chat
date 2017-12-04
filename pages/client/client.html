@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>Ship'n'Chat</title>
+
+  <link href="client.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+
+  <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+  <script src="client.js"></script>
+</head>
+
+<body>
+  <div class="row">
+    <div id="message_box" class="col-md-4">
+      <ul id="messages"></ul>
+      <form action="">
+        <div class="form-group">
+          <input type="text" class="form-control" id="m" aria-describedby="emailHelp" placeholder="Escreva sua mensagem" autocomplete="off">
+        </div>
+        <button class="btn btn-primary">Enviar</button>
+      </form>
+    </div>
+    <div id="content" class="col-md-8">
+      <div class="row">
+        <canvas id="paper" width="1024" height="768"></canvas>
+        <div id="panel" class="col-md-2">
+          <h3>Pontuação</h3>
+          <ul id="playerList"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
