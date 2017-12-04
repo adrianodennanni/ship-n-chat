@@ -1,183 +1,271 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <meta charset="utf-8" />
-    <title>Ship'n'Chat</title>
-    <style>
-        body,html {
-            padding: 0;
-            margin: 0;
-            height: 100%;
-            overflow: hidden;
-            background: #333;
-        }
-        #content {
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            background: #222;
-            width: 1204px;
-            height: 768px;
-            margin: auto;
-            border: 5px solid #222;
-        }
-        #paper {
-            background:url("/background.png");
-            width: 1024px;
-            height: 768px;
-            float: left;
-            left: 0;
-            top: 0;
-        }
-        #panel {
-            float: left;
-            font: normal 14px sans-serif;
-            color: #CCC;
-            width: 180px;
-        }
-        #panel h3 {
-            text-align: center;
-        }
-        #panel #playerList {
-            list-style-type: none;
-            padding: 0 0 0 10px;
-            margin: 0;
-        }
-        ul > li:nth-child(1) {
-          font-size: 22px;
-        }
-        ul > li:nth-child(2) {
-          font-size: 18px;
-        }
-    </style>
-    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+  <meta charset="utf-8" />
+  <title>Ship'n'Chat</title>
+  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+  <style>
+    html,
+    body {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      overflow: hidden;
+      background: #333;
+    }
+
+    #content {
+      right: 0;
+      top: 0;
+      bottom: 0;
+      background: #222;
+      width: 1204px;
+      height: 100%;
+      margin-top: auto;
+      margin-right: 0px;
+      margin-bottom: auto;
+      border: 5px solid #222;
+    }
+
+    #message_box {
+      display: table-cell;
+      width: 100%;
+    }
+
+    #paper {
+      background: url("/background.png");
+    }
+
+    #panel {
+      font: normal 14px sans-serif;
+      color: #CCC;
+      width: 180px;
+      top: 0px;
+      bottom: 0px;
+      float: right;
+    }
+
+    #panel h3 {
+      text-align: center;
+    }
+
+    #panel #playerList {
+      list-style-type: none;
+      padding: 0 0 0 10px;
+      margin: 0;
+    }
+
+    ul>li:nth-child(1) {
+      font-size: 22px;
+    }
+
+    ul>li:nth-child(2) {
+      font-size: 18px;
+    }
+
+    body {
+      font: 13px Helvetica, Arial;
+      display: table;
+    }
+
+    form {
+      background: #000;
+      padding: 3px;
+      bottom: 0;
+    }
+
+    form input {
+      position: relative;
+      border: 0;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      width: 90%;
+    }
+
+    form button {
+      width: 8%;
+      margin-left: 2%;
+      padding: 10px;
+    }
+
+    #messages {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+
+    }
+
+    #messages li {
+      padding: 5px 10px;
+    }
+
+    #messages li:nth-child(odd) {
+      background: #eee;
+    }
+
+    #messages {
+      margin-bottom: 40px
+    }
+  </style>
+  <script type="text/javascript" src="/socket.io/socket.io.js"></script>
 </head>
+
 <body>
-    <div id="content">
-        <canvas id="paper" width="1024" height="768"></canvas>
-        <div id="panel">
-            <h3>Pontuação</h3>
-            <ul id="playerList"></ul>
-        </div>
+  <div id="message_box">
+    <ul id="messages"></ul>
+    <form action="">
+      <input id="m" autocomplete="off" /><button>Enviar</button>
+    </form>
+  </div>
+  <div id="content">
+    <canvas id="paper" width="1024" height="768"></canvas>
+    <div id="panel">
+      <h3>Pontuação</h3>
+      <ul id="playerList"></ul>
     </div>
+  </div>
 </body>
 <script>
+  var SERVER_ADDRESS = document.URL;
 
-    var SERVER_ADDRESS = document.URL;
+  var ctx = document.getElementById("paper").getContext("2d");
+  var playerListElem = document.getElementById("playerList");
 
-    var ctx = document.getElementById("paper").getContext("2d");
-    var playerListElem = document.getElementById("playerList");
+  function invalidName(name) {
+    var new_name = prompt("Seu nome não pode exceder 10 caracteres. Escreva seu nome:");
+    if (new_name.length > 10) {
+      return invalidName(new_name);
+    }
+    return new_name;
+  }
 
-    var name = prompt("Escreva seu nome:");
-    if( name === null || name === "" || name === "null" ) {
-        name = "Jogador";
+  var name = prompt("Escreva seu nome:");
+
+  if (name.length > 10) {
+    name = invalidName(name);
+  }
+
+  if (name === null || name === "" || name === "null") {
+    name = "Jogador";
+  }
+
+  var keys = {};
+
+  ctx.lineWidth = 2;
+  ctx.font = "normal 14px sans-serif";
+
+  function render(state) {
+    ctx.clearRect(0, 0, 1024, 768);
+    var newListHTML = "";
+
+    // Renderiza as naves
+    for (var i = 0; i < state.p.length; ++i) {
+      ctx.save();
+      ctx.strokeStyle = "#" + state.p[i][5];
+      ctx.fillStyle = "#" + state.p[i][5];
+      ctx.translate(state.p[i][0], state.p[i][1]);
+      ctx.fillText(state.p[i][3], 12, -10);
+      ctx.rotate(state.p[i][2]);
+
+      ctx.beginPath();
+      ctx.moveTo(-12, -10);
+      ctx.lineTo(-14, -4);
+      ctx.lineTo(-14, -3);
+      ctx.lineTo(-16, -3);
+      ctx.lineTo(-16, -1);
+      ctx.lineTo(-14, -1);
+
+      ctx.lineTo(-14, 1);
+      ctx.lineTo(-16, 1);
+      ctx.lineTo(-16, 3);
+      ctx.lineTo(-14, 3);
+      ctx.lineTo(-14, 4);
+      ctx.lineTo(-12, 10);
+
+      ctx.lineTo(6, 10);
+      ctx.lineTo(-6, 10);
+      ctx.lineTo(-6, 3);
+      ctx.lineTo(-2, 3);
+      ctx.lineTo(-2, 2);
+      ctx.lineTo(4, 2);
+
+      ctx.lineTo(16, 0);
+
+      ctx.lineTo(4, -2);
+      ctx.lineTo(-2, -2);
+      ctx.lineTo(-2, -3);
+      ctx.lineTo(-6, -3);
+      ctx.lineTo(-6, -10);
+      ctx.lineTo(6, -10);
+
+      ctx.lineWidth = 1;
+      ctx.closePath();
+
+      ctx.fill();
+      ctx.stroke();
+      if (i == state.i && keys[38]) {
+        ctx.beginPath();
+        ctx.moveTo(-12, -4);
+        ctx.lineTo(-22, 0);
+        ctx.lineTo(-12, 4);
+        ctx.closePath();
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      newListHTML += "<li>" + state.p[i][3] + " : " + state.p[i][4] + "</li>";
     }
 
-    var keys = {};
+    // Renderiza as balas
+    for (var i = 0; i < state.b.length; ++i) {
+      ctx.fillStyle = "#" + state.b[i][2];
 
-    ctx.lineWidth = 2;
-    ctx.font = "normal 14px sans-serif";
-
-    function render( state )
-    {
-        ctx.clearRect( 0, 0, 1024, 768 );
-        var newListHTML = "";
-
-        // Renderiza as naves
-        for( var i = 0 ; i < state.p.length ; ++i )
-        {
-            ctx.save();
-            ctx.strokeStyle = "#"+state.p[i][5];
-            ctx.fillStyle = "#"+state.p[i][5];
-            ctx.translate( state.p[i][0], state.p[i][1] );
-            ctx.fillText( state.p[i][3], 12, -10 );
-            ctx.rotate( state.p[i][2] );
-
-            ctx.beginPath();
-            ctx.moveTo( -12, -10 );
-            ctx.lineTo( -14, -4 );
-            ctx.lineTo( -14, -3 );
-            ctx.lineTo( -16, -3 );
-            ctx.lineTo( -16, -1 );
-            ctx.lineTo( -14, -1 );
-
-            ctx.lineTo( -14, 1 );
-            ctx.lineTo( -16, 1 );
-            ctx.lineTo( -16, 3 );
-            ctx.lineTo( -14, 3 );
-            ctx.lineTo( -14, 4 );
-            ctx.lineTo( -12, 10 );
-
-            ctx.lineTo( 6, 10 );
-            ctx.lineTo( -6, 10 );
-            ctx.lineTo( -6, 3 );
-            ctx.lineTo( -2, 3 );
-            ctx.lineTo( -2, 2 );
-            ctx.lineTo( 4, 2 );
-
-            ctx.lineTo( 16, 0 );
-
-            ctx.lineTo( 4, -2 );
-            ctx.lineTo( -2, -2 );
-            ctx.lineTo( -2, -3 );
-            ctx.lineTo( -6, -3 );
-            ctx.lineTo( -6, -10 );
-            ctx.lineTo( 6, -10 );
-
-            ctx.lineWidth = 1;
-            ctx.closePath();
-
-            ctx.fill();
-            ctx.stroke();
-            if( i==state.i && keys[38] ) {
-                ctx.beginPath();
-                ctx.moveTo( -12, -4 );
-                ctx.lineTo( -22,  0 );
-                ctx.lineTo( -12,  4 );
-                ctx.closePath();
-                ctx.stroke();
-            }
-            ctx.restore();
-
-            newListHTML += "<li>"+state.p[i][3]+" : "+state.p[i][4]+"</li>";
-        }
-
-        // Renderiza as balas
-        for( var i = 0 ; i < state.b.length ; ++i )
-        {
-            ctx.fillStyle = "#"+state.b[i][2];
-
-            ctx.save();
-            ctx.translate( state.b[i][0], state.b[i][1] );
-            ctx.fillRect( -4, -4, 4, 4 );
-            ctx.restore();
-        }
-
-        playerListElem.innerHTML = newListHTML;
+      ctx.save();
+      ctx.translate(state.b[i][0], state.b[i][1]);
+      ctx.fillRect(-4, -4, 4, 4);
+      ctx.restore();
     }
 
-    // Conecta no servidor
-    var socket = io.connect( SERVER_ADDRESS );
-    socket.on("connect", function ()
-    {
-        window.onkeydown = function(e) {
-            keys[ e.keyCode ] = true;
-            socket.send( JSON.stringify(keys) );
-        }
-        window.onkeyup = function(e) {
-            delete keys[ e.keyCode ];
-            socket.send( JSON.stringify(keys) );
-        }
+    playerListElem.innerHTML = newListHTML;
+  }
 
-        socket.on("message", function(data) {
-            var state = JSON.parse(data);
-            render( state );
-        });
+  // Conecta no servidor
+  var socket = io.connect(SERVER_ADDRESS);
+  socket.on("connect", function() {
+    window.onkeydown = function(e) {
+      keys[e.keyCode] = true;
+      socket.send(JSON.stringify(keys));
+    }
+    window.onkeyup = function(e) {
+      delete keys[e.keyCode];
+      socket.send(JSON.stringify(keys));
+    }
 
-        socket.send(JSON.stringify({name:name}));
+    socket.on("message", function(data) {
+      var state = JSON.parse(data);
+      render(state);
     });
 
+    socket.send(JSON.stringify({
+      name: name
+    }));
+  });
 </script>
+
+<script>
+  $(function() {
+    var socket = io();
+    $('form').submit(function() {
+      socket.emit('chat message', $('#m').val());
+      $('#m').val('');
+      return false;
+    });
+    socket.on('chat message', function(msg) {
+      $('#messages').append($('<li>').text(msg));
+      window.scrollTo(0, document.body.scrollHeight);
+    });
+  });
+</script>
+
 </html>

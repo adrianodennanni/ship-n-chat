@@ -1,0 +1,24 @@
+{
+  "name": "Ship'n'Chat",
+  "description": "A simple spaceships game with a chat",
+  "website": "https://github.com/adrianodennanni/ship-n-chat",
+  "repository": "https://github.com/adrianodennanni/ship-n-chat",
+  "success_url": "/",
+  "keywords": [
+    "node",
+    "express",
+    "socket.io",
+    "realtime",
+    "websocket",
+    "game",
+    "spaceships",
+    "chat"
+  ],
+  "scripts": {
+  },
+  "addons": [
+  ],
+  "env": {
+    "BUILDPACK_URL": "https://github.com/heroku/heroku-buildpack-nodejs"
+  }
+}
