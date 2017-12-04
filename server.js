@@ -224,7 +224,7 @@ var playerSockets = [];
 var gameLoopInterval = null;
 
 // Serve a página estaticamente
-var PORT = 2017;
+var PORT = process.env.PORT || 2017;
 var app = require("http").createServer(handler);
 var io = require("socket.io").listen(app);
 var fs = require("fs");
