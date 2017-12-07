@@ -35,7 +35,7 @@ body {
   list-style-type: none;
   padding: 0;
 }
-#score_box h2 {
+#score_box h1 {
   text-align: center;
 }
 
@@ -55,10 +55,6 @@ body {
   background: url("/background.png");
 }
 
-form {
-  background: #000;
-}
-
 form input {}
 
 form button {}
@@ -75,12 +71,4 @@ form button {}
 
 #messages li:last-child {
   font-size: 22px;
-}
-
-#messages li:nth-child(odd) {
-  background: teal;
-}
-
-#messages li:nth-child(even) {
-  background: blue;
 }

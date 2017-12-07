@@ -124,8 +124,8 @@ var socket = io.connect(SERVER_ADDRESS);
 // Chat
 $(function() {
   $('form').submit(function() {
-    socket.emit('chat message', $('#m').val());
-    $('#m').val('');
+    socket.emit('chat message', $('#message_input').val());
+    $('#message_input').val('');
     return false;
   });
   socket.on('chat message', function(msg) {

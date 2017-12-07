@@ -246,6 +246,11 @@ function handler(req, res) {
       fileName = "/client.html";
     }
 
+    if (fileName == "/client.css") {
+      res.setHeader("Content-Type", "text/css; charset=utf-8");
+      fileName = "/client.css";
+    }
+
     if (players.length >= maxPlayers) {
       res.setHeader("Content-Type", "text/plain; charset=utf-8");
       return res.end("Número máximo de jogadores excedido.");

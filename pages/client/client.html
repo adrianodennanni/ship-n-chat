@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <title>Ship'n'Chat</title>
 
-  <link href="client.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="client.css"/>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -18,7 +18,7 @@
     <ul id="messages"></ul>
     <form action="">
       <div class="form-group">
-        <input type="text" class="form-control" id="m" aria-describedby="emailHelp" placeholder="Escreva sua mensagem" autocomplete="off">
+        <input type="text" rows=4 class="form-control" id="message_input" placeholder="Escreva sua mensagem...">
       </div>
       <button class="btn btn-primary">Enviar</button>
     </form>
@@ -31,10 +31,9 @@
   </div>
 
   <div id="score_box" class="box">
-    <h2>Pontuação</h2>
+    <h1>Pontuação</h1>
     <ul id="playerList"></ul>
   </div>
-
 
 </body>
 
