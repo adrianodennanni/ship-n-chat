@@ -230,8 +230,8 @@ var io = require("socket.io").listen(app);
 var fs = require("fs");
 app.listen(PORT);
 
-io.on('connection', function(socket){
-  socket.on('chat message', function(msg){
+io.on('connection', function(socket) {
+  socket.on('chat message', function(msg) {
     io.emit('chat message', msg);
   });
 });
@@ -241,7 +241,7 @@ function handler(req, res) {
   var fileName = req.url;
   var filepath = "/";
 
-  if (fileName != "/favicon.ico" && fileName!= "/background.png") {
+  if (fileName != "/favicon.ico" && fileName != "/background.png") {
     if (fileName == "/") {
       fileName = "/client.html";
     }
@@ -256,10 +256,6 @@ function handler(req, res) {
     filepath = fileName;
   }
 
-  /*if (filepath !== "/pages/client/client.html" && filepath !== "/favicon.ico" && filepath !== "/background.png") {
-    res.writeHead(500);
-    return res.end("Rota inexistente!");
-  }*/
   fs.readFile(__dirname + filepath,
     function(err, data) {
       if (err) {
@@ -298,5 +294,3 @@ io.sockets.on("connection", function(socket) {
     gameLoopInterval = setInterval(gameLoop, 25);
   }
 });
-
-// ######################################################################################

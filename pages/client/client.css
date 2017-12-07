@@ -1,61 +1,67 @@
-html {
-  zoom:80%;
-}
-
-html,
 body {
-  overflow-x: hidden;
-  overflow-y: hidden;
-  background: #333 !important;
-}
-
-#content {
-  right: 0;
-  top: 0;
-  bottom: 0;
-  background: #222;
-  width: 1204px;
-  height: 100%;
-  margin-top: auto;
-  margin-right: 0px;
-  margin-bottom: auto;
-  border: 5px solid #222;
-}
-
-#message_box {
+  margin: 0px;
+  display: table;
   width: 100%;
+  min-height: 100vh;
+}
+
+.box {
+  display: table-cell;
+  vertical-align: middle;
+  width: auto;
+}
+
+#chat_box {
+  background-color: black;
+}
+
+#game_box {
+  background-color: #262626;
+  width: 1024px;
+  height: 100%;
+}
+
+#score_box {
+  vertical-align: text-top;
+  background-color: black;
+  width: 200px;
+  height: 100%;
+  font: normal 14px sans-serif;
+  color: #CCC;
+  padding: 10px
+}
+
+#score_box #playerList {
+  list-style-type: none;
+  padding: 0;
+}
+#score_box h2 {
+  text-align: center;
+}
+
+#score_box li:nth-child(1) {
+  font-size: 26px;
+}
+
+#score_box li:nth-child(2) {
+  font-size: 22px;
+}
+
+#score_box li:nth-child(3) {
+  font-size: 18px;
 }
 
 #paper {
   background: url("/background.png");
 }
 
-#panel {
-  font: normal 14px sans-serif;
-  color: #CCC;
-  float: right;
-}
-
-#panel h3 {
-}
-
-#panel #playerList {
-  list-style-type: none;
-}
-
-body {
-  font: 13px Helvetica, Arial;
-}
-
 form {
   background: #000;
 }
 
-form input {
-}
+form input {}
 
-form button {
-}
+form button {}
 
 #messages {
   overflow-y: scroll;
@@ -74,28 +80,7 @@ form button {
 #messages li:nth-child(odd) {
   background: teal;
 }
+
 #messages li:nth-child(even) {
   background: blue;
-}
-
-.row {
-  overflow-x: auto;
-  white-space: nowrap;
-  flex-wrap: nowrap !important;
-}
-
-.row > .col-md-1,
-.row > .col-md-2,
-.row > .col-md-3,
-.row > .col-md-4,
-.row > .col-md-5,
-.row > .col-md-6,
-.row > .col-md-7,
-.row > .col-md-8,
-.row > .col-md-9,
-.row > .col-md-10,
-.row > .col-md-11,
-.row > .col-md-12 {
-  display: inline-block !important;
-  float: none !important;
 }
