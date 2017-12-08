@@ -138,6 +138,7 @@ $(function() {
   });
   socket.on('chat message', function(msg) {
     text_message = '<b>' + msg.name + ': </b>' + msg.message;
+    responsiveVoice.speak(msg.message, 'Brazilian Portuguese Female');
     $('#messagesList').append($('<li style="color:#' + msg.color + '">' + text_message + '</li>')).focus();
     $('#messagesList').animate({
       scrollTop: $('#messagesList').prop("scrollHeight")
