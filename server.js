@@ -170,6 +170,14 @@ Player.prototype.update = function() {
 }
 
 //-------------------------------------------------------------------------
+function buildMessage(msg, player) {
+  built = {}
+  built['color'] = player.color;
+  built['name'] = player.name;
+  built['message'] = msg;
+  return built;
+}
+//-------------------------------------------------------------------------
 
 function gameLoop() {
   var statePacket = {
@@ -230,20 +238,19 @@ var io = require("socket.io").listen(app);
 var fs = require("fs");
 app.listen(PORT);
 
-io.on('connection', function(socket){
-  socket.on('chat message', function(msg){
-    io.emit('chat message', msg);
-  });
-});
-
 function handler(req, res) {
 
   var fileName = req.url;
   var filepath = "/";
 
-  if (fileName != "/favicon.ico" && fileName!= "/background.png") {
+  if (fileName != "/favicon.ico" && fileName != "/background.png") {
     if (fileName == "/") {
       fileName = "/client.html";
+    }
+
+    if (fileName == "/client.css") {
+      res.setHeader("Content-Type", "text/css; charset=utf-8");
+      fileName = "/client.css";
     }
 
     if (players.length >= maxPlayers) {
@@ -256,10 +263,6 @@ function handler(req, res) {
     filepath = fileName;
   }
 
-  /*if (filepath !== "/pages/client/client.html" && filepath !== "/favicon.ico" && filepath !== "/background.png") {
-    res.writeHead(500);
-    return res.end("Rota inexistente!");
-  }*/
   fs.readFile(__dirname + filepath,
     function(err, data) {
       if (err) {
@@ -275,6 +278,10 @@ function handler(req, res) {
 
 io.sockets.on("connection", function(socket) {
   var player = new Player();
+
+  socket.on('chat message', function(msg) {
+    io.emit('chat message', buildMessage(msg, player));
+  });
 
   players.push(player);
   playerSockets.push(socket);
@@ -298,5 +305,3 @@ io.sockets.on("connection", function(socket) {
     gameLoopInterval = setInterval(gameLoop, 25);
   }
 });
-
-// ######################################################################################
