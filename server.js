@@ -170,6 +170,14 @@ Player.prototype.update = function() {
 }
 
 //-------------------------------------------------------------------------
+function buildMessage(msg, player) {
+  built = {}
+  built['color'] = player.color;
+  built['name'] = player.name;
+  built['message'] = msg;
+  return built;
+}
+//-------------------------------------------------------------------------
 
 function gameLoop() {
   var statePacket = {
@@ -230,12 +238,6 @@ var io = require("socket.io").listen(app);
 var fs = require("fs");
 app.listen(PORT);
 
-io.on('connection', function(socket) {
-  socket.on('chat message', function(msg) {
-    io.emit('chat message', msg);
-  });
-});
-
 function handler(req, res) {
 
   var fileName = req.url;
@@ -276,6 +278,10 @@ function handler(req, res) {
 
 io.sockets.on("connection", function(socket) {
   var player = new Player();
+
+  socket.on('chat message', function(msg) {
+    io.emit('chat message', buildMessage(msg, player));
+  });
 
   players.push(player);
   playerSockets.push(socket);

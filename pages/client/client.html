@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <title>Ship'n'Chat</title>
 
-  <link rel="stylesheet" type="text/css" href="client.css"/>
+  <link rel="stylesheet" type="text/css" href="client.css" />
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -15,12 +15,10 @@
 <body>
 
   <div id="chat_box" class="box">
-    <ul id="messages"></ul>
+    <ul id="messagesList"></ul>
     <form action="">
-      <div class="form-group">
-        <input type="text" rows=4 class="form-control" id="message_input" placeholder="Escreva sua mensagem...">
-      </div>
-      <button class="btn btn-primary">Enviar</button>
+      <textarea type="submit" id="message_input" placeholder="Escreva sua mensagem..."></textarea>
+      <button>Enviar</button>
     </form>
   </div>
 

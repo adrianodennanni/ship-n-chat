@@ -15,6 +15,14 @@ $(document).ready(function() {
     return false;
   });
 
+  $("#message_input").keypress(function(e) {
+    if (e.which == 13 && !e.shiftKey) {
+      $(this).closest("form").submit();
+      e.preventDefault();
+      return false;
+    }
+  });
+
   SERVER_ADDRESS = document.URL;
 
   ctx = document.getElementById("paper").getContext("2d");
@@ -129,9 +137,10 @@ $(function() {
     return false;
   });
   socket.on('chat message', function(msg) {
-    $('#messages').append($('<li>').text(msg)).focus();
-    $('#messages').animate({
-      scrollTop: $('#messages').prop("scrollHeight")
+    text_message = '<b>' + msg.name + ': </b>' + msg.message;
+    $('#messagesList').append($('<li style="color:#' + msg.color + '">' + text_message + '</li>')).focus();
+    $('#messagesList').animate({
+      scrollTop: $('#messagesList').prop("scrollHeight")
     }, 1);
   });
 });
